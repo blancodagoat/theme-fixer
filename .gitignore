@@ -1,0 +1,4 @@
+*.ipa
+*.hbc
+__pycache__/
+.venv/
