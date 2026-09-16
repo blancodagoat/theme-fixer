@@ -181,8 +181,14 @@
   .unknown ul { list-style: none; padding: 0; }
   .unknown li + li { margin-top: 0.4rem; }
 
+  #changelog { margin-top: 4rem; }
+  #changelog h3 { font-size: 1rem; margin: 1.75rem 0 0; }
+  #changelog .date { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.5rem; }
+  #changelog ul { margin: 0; padding-left: 1.2rem; max-width: 38rem; }
+  #changelog li + li { margin-top: 0.45rem; }
+
   footer {
-    margin-top: 4rem;
+    margin-top: 3rem;
     padding-top: 1rem;
     border-top: 1px solid var(--line);
     color: var(--muted);
@@ -242,6 +248,33 @@
       <p>Discord removed these and there's no clear replacement. They're left in the file but won't do anything.</p>
       <ul></ul>
     </div>
+  </section>
+
+  <section id="changelog">
+    <h2>Changelog</h2>
+
+    <h3>1.2</h3>
+    <p class="date">September 16, 2026</p>
+    <ul>
+      <li>Fixed: themes with <code>"spec": "2"</code> (text instead of a number) were refused with a confusing message. They're accepted now and saved with the number 2, which your mod needs before it will install them.</li>
+      <li>Fixed: a theme with <code>"semanticColors": null</code> showed a cryptic error instead of saying what was wrong.</li>
+      <li>Fixed: when a theme doesn't set <code>CHAT_BACKGROUND</code>, the chat background was taken from <code>BACKGROUND_SECONDARY</code>. It now uses <code>BACKGROUND_PRIMARY</code>, which is what older themes mean by it. Install links made from a theme link pick this up on their own. If you uploaded a file, load it again and get a new install link.</li>
+      <li>Added replacements for 11 more old color names, including the typing indicator, expression picker, faint borders, focus color, danger buttons, and the danger, idle and offline status colors.</li>
+      <li>Checked against 656 published themes.</li>
+    </ul>
+
+    <h3>1.1</h3>
+    <p class="date">September 16, 2026</p>
+    <ul>
+      <li>Install links. Load a theme from a link and you get a link your mod can install directly. It fixes the original every time your mod loads it, so updates from the theme's author still come through.</li>
+      <li>Load a theme from a file and Get install link uploads the fixed copy and gives you a permanent link.</li>
+    </ul>
+
+    <h3>1.0</h3>
+    <p class="date">September 16, 2026</p>
+    <ul>
+      <li>First version. Adds Discord's new color names next to the old ones in spec 2 themes, using the color data from Discord 305.1 and 345.0. Names without an exact match are marked as guesses.</li>
+    </ul>
   </section>
 
   <footer>
