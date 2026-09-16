@@ -397,6 +397,14 @@
    {
     "name": "BACKGROUND_BASE_LOW",
     "exact": true
+   },
+   {
+    "name": "CHANNEL_BACKGROUND_DEFAULT",
+    "exact": false
+   },
+   {
+    "name": "STANDALONE_CHANNEL_CONTENT_BACKGROUND",
+    "exact": false
    }
   ],
   "BACKGROUND_SECONDARY": [
@@ -407,14 +415,6 @@
    {
     "name": "CHAT_BANNER_BG",
     "exact": true
-   },
-   {
-    "name": "CHANNEL_BACKGROUND_DEFAULT",
-    "exact": false
-   },
-   {
-    "name": "STANDALONE_CHANNEL_CONTENT_BACKGROUND",
-    "exact": false
    }
   ],
   "BACKGROUND_TERTIARY": [
@@ -427,6 +427,14 @@
    {
     "name": "BACKGROUND_BASE_LOW",
     "exact": true
+   },
+   {
+    "name": "CHANNEL_BACKGROUND_DEFAULT",
+    "exact": false
+   },
+   {
+    "name": "STANDALONE_CHANNEL_CONTENT_BACKGROUND",
+    "exact": false
    }
   ],
   "BG_BASE_SECONDARY": [
@@ -437,14 +445,6 @@
    {
     "name": "CHAT_BANNER_BG",
     "exact": true
-   },
-   {
-    "name": "CHANNEL_BACKGROUND_DEFAULT",
-    "exact": false
-   },
-   {
-    "name": "STANDALONE_CHANNEL_CONTENT_BACKGROUND",
-    "exact": false
    }
   ],
   "BG_BASE_TERTIARY": [
@@ -457,11 +457,31 @@
    {
     "name": "BACKGROUND_BASE_LOW",
     "exact": false
+   },
+   {
+    "name": "CHANNEL_BACKGROUND_DEFAULT",
+    "exact": false
+   },
+   {
+    "name": "STANDALONE_CHANNEL_CONTENT_BACKGROUND",
+    "exact": false
    }
   ],
   "BACKGROUND_MOBILE_SECONDARY": [
    {
     "name": "BACKGROUND_BASE_LOWER",
+    "exact": false
+   }
+  ],
+  "TYPING_INDICATOR_BG": [
+   {
+    "name": "MOBILE_TYPING_INDICATOR_BACKGROUND_DEFAULT",
+    "exact": false
+   }
+  ],
+  "EXPRESSION_PICKER_BG": [
+   {
+    "name": "MOBILE_EXPRESSION_PICKER_BACKGROUND_DEFAULT",
     "exact": false
    }
   ],
@@ -499,6 +519,12 @@
    {
     "name": "BACKGROUND_SURFACE_HIGH",
     "exact": true
+   }
+  ],
+  "ACTIVITY_CARD_BACKGROUND": [
+   {
+    "name": "CARD_BACKGROUND_DEFAULT",
+    "exact": false
    }
   ],
   "BG_SURFACE_OVERLAY": [
@@ -563,6 +589,24 @@
    {
     "name": "BACKGROUND_MOD_STRONG",
     "exact": true
+   }
+  ],
+  "BG_MOD_FAINT": [
+   {
+    "name": "BACKGROUND_MOD_MUTED",
+    "exact": false
+   }
+  ],
+  "BORDER_FAINT": [
+   {
+    "name": "BORDER_MUTED",
+    "exact": true
+   }
+  ],
+  "FOCUS_PRIMARY": [
+   {
+    "name": "BORDER_FOCUS",
+    "exact": false
    }
   ],
   "TEXT_NORMAL": [
@@ -745,9 +789,31 @@
     "exact": true
    }
   ],
+  "STATUS_DANGER_BACKGROUND": [
+   {
+    "name": "STATUS_DANGER",
+    "exact": false
+   }
+  ],
   "STATUS_DND": [
    {
     "name": "ICON_STATUS_DND",
+    "exact": false
+   }
+  ],
+  "STATUS_IDLE": [
+   {
+    "name": "ICON_STATUS_IDLE",
+    "exact": false
+   }
+  ],
+  "STATUS_OFFLINE": [
+   {
+    "name": "ICON_STATUS_OFFLINE",
+    "exact": false
+   },
+   {
+    "name": "TEXT_STATUS_OFFLINE",
     "exact": false
    }
   ],
@@ -844,6 +910,18 @@
   "REDESIGN_BUTTON_SECONDARY_OVERLAY_PRESSED_BACKGROUND": [
    {
     "name": "CONTROL_OVERLAY_SECONDARY_BACKGROUND_ACTIVE",
+    "exact": false
+   }
+  ],
+  "REDESIGN_BUTTON_DANGER_BACKGROUND": [
+   {
+    "name": "CONTROL_CRITICAL_PRIMARY_BACKGROUND_DEFAULT",
+    "exact": false
+   }
+  ],
+  "BUTTON_OUTLINE_DANGER_BORDER": [
+   {
+    "name": "CONTROL_CRITICAL_SECONDARY_BORDER_DEFAULT",
     "exact": false
    }
   ],

@@ -35,8 +35,20 @@ assert.ok(added.some((a) => a.from === "BACKGROUND_PRIMARY" && a.to === "BACKGRO
 assert.ok(!added.some((a) => a.to === "TEXT_DEFAULT"));
 assert.deepEqual(unknown, ["SOMETHING_DISCORD_REMOVED"]);
 
+const noChat = fixTheme({ semanticColors: { BACKGROUND_PRIMARY: ["#111111"], BACKGROUND_SECONDARY: ["#222222"] } }, data);
+assert.deepEqual(noChat.theme.semanticColors.CHANNEL_BACKGROUND_DEFAULT, ["#111111"], "chat falls back to the primary background");
+
+assert.equal(fixTheme(theme, data).specFixed, false);
+const stringSpec = fixTheme({ spec: "2", semanticColors: { TEXT_NORMAL: ["#ffffff"] } }, data);
+assert.equal(stringSpec.theme.spec, 2, "a string spec is turned into a number");
+assert.equal(stringSpec.specFixed, true);
+assert.deepEqual(stringSpec.theme.semanticColors.TEXT_DEFAULT, ["#ffffff"]);
+
 assert.throws(() => fixTheme({ spec: 3, semanticColors: {} }, data), /spec 3/);
+assert.throws(() => fixTheme({ spec: "3.0", semanticColors: {} }, data), /spec "3\.0"/);
 assert.throws(() => fixTheme({ name: "nope" }, data), /semanticColors/);
+assert.throws(() => fixTheme({ semanticColors: null }, data), /semanticColors/);
+assert.throws(() => fixTheme(null, data), /semanticColors/);
 
 for (const targets of Object.values(data.map)) {
   for (const { name } of targets) assert.ok(data.tokens.includes(name), `${name} is a real token`);

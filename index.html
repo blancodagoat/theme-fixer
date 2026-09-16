@@ -341,9 +341,12 @@
 
     $("theme-name").textContent = theme.name || base;
     const sources = new Set(result.added.map((a) => a.from)).size;
-    $("summary").textContent = result.added.length
-      ? `Added ${result.added.length} new color names from ${sources} old ones.`
-      : "Nothing to add. This theme already uses the new names, or none of its old names have a replacement.";
+    const changed = result.added.length > 0 || result.specFixed;
+    $("summary").textContent = [
+      result.added.length && `Added ${result.added.length} new color names from ${sources} old ones.`,
+      result.specFixed && `Changed "spec": "2" to "spec": 2, since mods reject themes where it's text.`,
+      !changed && "Nothing to add. This theme already uses the new names, or none of its old names have a replacement.",
+    ].filter(Boolean).join(" ");
 
     const rows = new Map();
     for (const change of result.added) {
@@ -381,9 +384,9 @@
     $("unknown").hidden = result.unknown.length === 0;
 
     showInstall(sourceUrl);
-    $("install").hidden = rows.size === 0;
-    $("download").disabled = rows.size === 0;
-    $("copy").disabled = rows.size === 0;
+    $("install").hidden = !changed;
+    $("download").disabled = !changed;
+    $("copy").disabled = !changed;
     $("result").hidden = false;
     $("result").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   }

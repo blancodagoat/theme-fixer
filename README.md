@@ -6,7 +6,7 @@ This page takes a spec 2 theme and adds the new names next to the old ones:
 
 **https://blancodagoat.github.io/theme-fixer/**
 
-Old names are kept, so the fixed theme still works on older Discord versions. Names the theme already sets are never overwritten.
+Old names are kept, so the fixed theme still works on older Discord versions. Names the theme already sets are never overwritten. Themes that have `"spec": "2"` as text get it turned into the number, since mods refuse to install them otherwise.
 
 ## Install links
 
@@ -38,6 +38,16 @@ python tools/build_map.py Discord_305.1.ipa Discord_345.0.ipa
 
 When Discord ships another update, run it again with the new IPA. It warns about any target that no longer exists.
 
+Where a theme has no `CHAT_BACKGROUND`, the chat background comes from `BACKGROUND_PRIMARY`. In Discord's own 305.1 values the chat matches the old secondary background, but old themes treat primary as the chat color, and of the published themes that set both old and new names, 85% or so use their primary color for the new chat background.
+
+To check the mapping against real themes, put some theme files in a folder and run:
+
+```
+node tools/check_themes.mjs <folder>
+```
+
+It fixes every theme, checks that nothing already in a theme changes, that every added name is real and gets its color from the right old name, and that fixing twice adds nothing. It also lists the removed names that themes use most and that have no replacement yet. Across 656 published themes it currently reports no problems, and the number of color names Discord still uses goes from about 11,000 to 31,000.
+
 ## Tests
 
 ```
@@ -50,4 +60,4 @@ node smoke.mjs http://127.0.0.1:8787                      # in another
 node smoke.mjs https://theme-fixer.xewier.workers.dev     # against the live worker
 ```
 
-Deploy the worker with `npx wrangler deploy` from `worker/`. The page itself is served by GitHub Pages from `main`.
+Deploy the worker with `npx wrangler deploy` from `worker/`. It bundles `convert.js` and `map.json`, so deploy it again whenever either changes, or install links will fix themes differently from the page. The page itself is served by GitHub Pages from `main`.
