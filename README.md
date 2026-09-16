@@ -6,7 +6,24 @@ This page takes a spec 2 theme and adds the new names next to the old ones:
 
 **https://blancodagoat.github.io/theme-fixer/**
 
-Old names are kept, so the fixed theme still works on older Discord versions. Names the theme already sets are never overwritten. Everything runs in your browser.
+Old names are kept, so the fixed theme still works on older Discord versions. Names the theme already sets are never overwritten.
+
+## Install links
+
+Mods install themes from a link, so the page hands you one:
+
+- Theme loaded from a link: `https://theme-fixer.xewier.workers.dev/fix?url=<original link>`. The worker downloads the original and fixes it every time the mod loads it, so updates from the theme's author still come through. Nothing is stored.
+- Theme loaded from a file: **Get install link** uploads the fixed theme and returns `https://theme-fixer.xewier.workers.dev/themes/<id>.json`. The id comes from the file's contents, so the same theme always gets the same link. Uploaded themes are public and don't expire.
+
+The worker lives in `worker/`. It uses the same `convert.js` and `map.json` as the page, stores uploads in Workers KV, allows 60 fix requests and 10 uploads a minute per IP, and caps themes at 512 KB.
+
+To take an uploaded theme down:
+
+```
+curl -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" https://theme-fixer.xewier.workers.dev/themes/<id>
+```
+
+`ADMIN_TOKEN` is a worker secret (`npx wrangler secret put ADMIN_TOKEN`). For local runs, put it in `worker/.dev.vars`.
 
 ## Where the mapping comes from
 
@@ -25,4 +42,12 @@ When Discord ships another update, run it again with the new IPA. It warns about
 
 ```
 node test.mjs
+
+cd worker
+npm install
+npx wrangler dev                                          # in one terminal
+node smoke.mjs http://127.0.0.1:8787                      # in another
+node smoke.mjs https://theme-fixer.xewier.workers.dev     # against the live worker
 ```
+
+Deploy the worker with `npx wrangler deploy` from `worker/`. The page itself is served by GitHub Pages from `main`.

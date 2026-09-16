@@ -98,8 +98,8 @@
   .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
   .drop:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-  form { display: flex; gap: 0.5rem; }
-  input[type="url"] {
+  form, .link-row { display: flex; gap: 0.5rem; }
+  input[type="url"], input[type="text"] {
     flex: 1;
     min-width: 0;
     font: inherit;
@@ -132,7 +132,15 @@
 
   #result { margin-top: 3rem; }
   .summary { color: var(--muted); margin: 0.35rem 0 1.25rem; }
-  .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .install {
+    padding: 1rem;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .install p { margin-bottom: 0.75rem; }
+  .install input { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.85rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 2rem; }
 
   table { width: 100%; border-collapse: collapse; }
   th {
@@ -183,7 +191,7 @@
 
   @media (max-width: 480px) {
     main { padding-top: 2rem; }
-    form { flex-direction: column; }
+    form, .link-row { flex-direction: column; }
     thead { display: none; }
     tr { display: block; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
     td { display: block; border: 0; padding: 0; }
@@ -212,11 +220,19 @@
   <section id="result" hidden>
     <h2 id="theme-name"></h2>
     <p class="summary" id="summary"></p>
+    <div class="install" id="install">
+      <p id="install-text"></p>
+      <div class="link-row" id="link-row" hidden>
+        <input type="text" id="install-link" readonly aria-label="Install link">
+        <button type="button" id="copy-link">Copy link</button>
+      </div>
+      <button type="button" id="upload" hidden>Get install link</button>
+    </div>
     <div class="actions">
-      <button type="button" id="download">Download fixed theme</button>
+      <button type="button" class="plain" id="download">Download fixed theme</button>
       <button type="button" class="plain" id="copy">Copy JSON</button>
     </div>
-    <p id="hint">To install it, put the file somewhere with a direct link, like a GitHub repo, and add that link in your mod's theme settings. Rows marked <span class="guess">guess</span> had no exact match in Discord's own color data, so check those in the app.</p>
+    <p id="hint">Rows marked <span class="guess">guess</span> had no exact match in Discord's own color data, so check those in the app.</p>
     <table id="changes">
       <thead><tr><th>Name in your theme</th><th>Also set as</th></tr></thead>
       <tbody></tbody>
@@ -229,13 +245,14 @@
   </section>
 
   <footer>
-    <p>Color names come from Discord <span id="version">345.0</span>, compared against 305.1, the last version that had both the old and new names. Nothing you load leaves your browser. <a href="https://github.com/blancodagoat/theme-fixer">Source on GitHub</a></p>
+    <p>Color names come from Discord <span id="version">345.0</span>, compared against 305.1, the last version that had both the old and new names. Theme files stay in your browser unless you choose Get install link. <a href="https://github.com/blancodagoat/theme-fixer">Source on GitHub</a></p>
   </footer>
 </main>
 
 <script type="module">
   import { fixTheme } from "./convert.js";
 
+  const API = "https://theme-fixer.xewier.workers.dev";
   const $ = (id) => document.getElementById(id);
   const data = fetch("map.json").then((r) => r.json());
   let output = null;
@@ -278,7 +295,32 @@
     return el;
   }
 
-  async function load(text, fileName) {
+  function showInstall(sourceUrl) {
+    $("link-row").hidden = true;
+    $("upload").hidden = true;
+    if (sourceUrl) {
+      $("install-text").textContent = "Paste this link into your mod's theme settings. It fixes the original theme every time it loads, so the author's updates still come through.";
+      showLink(`${API}/fix?url=${encodeURIComponent(sourceUrl)}`);
+    } else {
+      $("install-text").textContent = "Your mod installs themes from a link. Uploading stores the fixed theme publicly so it has one.";
+      $("upload").textContent = "Get install link";
+      $("upload").disabled = false;
+      $("upload").hidden = false;
+    }
+  }
+
+  function showLink(link) {
+    $("install-link").value = link;
+    $("link-row").hidden = false;
+  }
+
+  function flash(button, text) {
+    const original = button.textContent;
+    button.textContent = text;
+    setTimeout(() => { button.textContent = original; }, 1500);
+  }
+
+  async function load(text, fileName, sourceUrl) {
     $("error").hidden = true;
     let theme;
     try {
@@ -338,6 +380,8 @@
     list.replaceChildren(...result.unknown.map((key) => named("li", key, theme.semanticColors[key])));
     $("unknown").hidden = result.unknown.length === 0;
 
+    showInstall(sourceUrl);
+    $("install").hidden = rows.size === 0;
     $("download").disabled = rows.size === 0;
     $("copy").disabled = rows.size === 0;
     $("result").hidden = false;
@@ -345,7 +389,9 @@
   }
 
   async function loadFile(file) {
-    if (file) load(await file.text(), file.name);
+    if (!file) return;
+    $("url").value = "";
+    load(await file.text(), file.name);
   }
 
   $("file").addEventListener("change", (e) => loadFile(e.target.files[0]));
@@ -370,7 +416,34 @@
     } catch {
       return showError("Couldn't download that URL. Use a direct link to the .json file, raw.githubusercontent.com links work.");
     }
-    load(text, decodeURIComponent(new URL(url).pathname.split("/").pop()));
+    load(text, decodeURIComponent(new URL(url).pathname.split("/").pop()), url);
+  });
+
+  $("upload").addEventListener("click", async () => {
+    const button = $("upload");
+    button.disabled = true;
+    button.textContent = "Uploading…";
+    try {
+      const res = await fetch(`${API}/themes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: output.json,
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error);
+      button.hidden = true;
+      $("install-text").textContent = "Paste this link into your mod's theme settings.";
+      showLink(body.url);
+    } catch (e) {
+      button.disabled = false;
+      button.textContent = "Try again";
+      $("install-text").textContent = e instanceof TypeError ? "Upload failed. Check your connection and try again." : e.message;
+    }
+  });
+
+  $("copy-link").addEventListener("click", async () => {
+    await navigator.clipboard.writeText($("install-link").value);
+    flash($("copy-link"), "Copied");
   });
 
   $("download").addEventListener("click", () => {
@@ -383,8 +456,7 @@
 
   $("copy").addEventListener("click", async () => {
     await navigator.clipboard.writeText(output.json);
-    $("copy").textContent = "Copied";
-    setTimeout(() => { $("copy").textContent = "Copy JSON"; }, 1500);
+    flash($("copy"), "Copied");
   });
 </script>
 </body>

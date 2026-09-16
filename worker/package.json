@@ -1,0 +1,13 @@
+{
+  "name": "theme-fixer-worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "smoke": "node smoke.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.132.0"
+  }
+}

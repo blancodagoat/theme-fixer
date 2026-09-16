@@ -1,0 +1,21 @@
+{
+    "name": "Theme fixer test",
+    "description": "Small spec 2 theme used by the tests",
+    "authors": [{ "name": "theme-fixer", "id": "0" }],
+    "spec": 2,
+    "semanticColors": {
+        "BACKGROUND_PRIMARY": ["#1b1e2b", "#f4f4f8"],
+        "BACKGROUND_SECONDARY": ["#161822", "#e8e8f0"],
+        "BACKGROUND_TERTIARY": ["#11131b", "#dcdce6"],
+        "CHAT_BACKGROUND": ["#1b1e2b", "#ffffff"],
+        "HEADER_PRIMARY": ["#e6e8f2", "#1b1e2b"],
+        "TEXT_NORMAL": ["#c9ccdb", "#2b2e3b"],
+        "TEXT_MUTED": ["#7c8096", "#6b6f85"],
+        "TEXT_LINK": ["#82aaff", "#3b6fd8"],
+        "SCROLLBAR_AUTO_THUMB": ["#2a2e40", "#c8c8d4"]
+    },
+    "rawColors": {
+        "PRIMARY_500": "#4e5579",
+        "BRAND_500": "#82aaff"
+    }
+}
